@@ -1,19 +1,8 @@
-# redirect the main page to landing
-##RedirectMatch 302 ^/$ /landing
-
-# remove html ext from url
-# https://stackoverflow.com/questions/4026021/remove-html-extension-with-htaccess
-RewriteEngine on 
-
-# File exists but has a trailing slash
-# https://stackoverflow.com/questions/21417263/htaccess-add-remove-trailing-slash-from-url
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^/]+)/$ $1.html
+RewriteRule ^([^/]+)/([^/]+)/$ /$1/$2.html
+RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^/?(.*)/+$ /$1 [R=302,L,QSA]
-
-# ok. It will still find the file but relative assets won't load
-# e.g. page: /landing/  -> assets/js/main.js/main
-# that's we have the rules above.
-RewriteCond %{REQUEST_FILENAME} !\.html
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME}\.html -f 
-RewriteRule ^/?(.*?)/?$ $1.html
+RewriteCond %{REQUEST_URI} !(\.[a-zA-Z0-9]{1,5}|/)$
+RewriteRule ^(.+)/$ /$1 [L,R=301]
